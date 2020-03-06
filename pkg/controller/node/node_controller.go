@@ -114,7 +114,7 @@ func (r *ReconcileNode) Reconcile(request reconcile.Request) (reconcile.Result, 
 	}
 
 	// Node already tagged properly
-	reqLogger.Info("Skip reconcile: Node instance already tagged")
+	reqLogger.Info("Node instance has been tagged")
 
 	return reconcile.Result{}, nil
 }
