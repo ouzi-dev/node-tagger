@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-tagger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: node-tagger
+  template:
+    metadata:
+      labels:
+        name: node-tagger
+    spec:
+      serviceAccountName: node-tagger
+      containers:
+        - name: node-tagger
+          # Replace this with the built image name
+          image: quay.io/ouzi/node-tagger:v1.0.0
+          command:
+          - node-tagger
+          args:
+            #- -t
+            #- tagKey1=tagValue1
+            #- -t
+            #- tagKey2=tagValue2
+          imagePullPolicy: IfNotExists
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: http-metrics
+              containerPort: 8383
+              protocol: TCP
+            - name: cr-metrics
+              containerPort: 8686
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          env:
+            - name: SERVICE_MONITOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "node-tagger"

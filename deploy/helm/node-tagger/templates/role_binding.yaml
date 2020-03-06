@@ -1,0 +1,20 @@
+{{- if .Values.rbac.create -}}
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "node-tagger.rbacRoleBindingName" . }}
+  labels:
+    {{- include "node-tagger.labels" . | nindent 4 }}
+  {{- with .Values.rbac.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "node-tagger.serviceAccountName" . }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "node-tagger.rbacRoleName" . }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end -}}
