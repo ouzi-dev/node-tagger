@@ -86,7 +86,7 @@ type ReconcileNode struct {
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
 func (r *ReconcileNode) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger := log.WithValues("Node.Name", request.Name)
 	reqLogger.Info("Reconciling Node")
 
 	// Fetch the Node instance
@@ -105,6 +105,7 @@ func (r *ReconcileNode) Reconcile(request reconcile.Request) (reconcile.Result, 
 
 	// Node is not an aws one so skip it. Return and don't requeue
 	if !isAwsNode(instance) {
+		reqLogger.Info("Node is not an AWS node. Skipping")
 		return reconcile.Result{}, nil
 	}
 

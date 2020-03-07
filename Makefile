@@ -147,8 +147,6 @@ clean: helm-clean
 
 .PHONY: generate
 generate: setup
-	@operator-sdk generate k8s
-	@operator-sdk generate crds
 	@go generate ./...
 
 CHART_NAME ?= node-tagger
