@@ -12,6 +12,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+podDisruptionBudget:
+  minAvailable: 1
+
 awsCredentials:
   # Region must always be set
   awsRegion:
