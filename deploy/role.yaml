@@ -6,14 +6,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - nodes
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
       - pods
       - services
       - services/finalizers
@@ -47,14 +39,10 @@ rules:
     verbs:
       - update
   - apiGroups:
-      - credstash.ouzi.tech
+      - ""
     resources:
-      - '*'
+      - nodes
     verbs:
-      - create
-      - delete
       - get
       - list
-      - patch
-      - update
       - watch

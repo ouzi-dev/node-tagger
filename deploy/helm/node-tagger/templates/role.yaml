@@ -46,15 +46,11 @@ rules:
   verbs:
   - update
 - apiGroups:
-  - credstash.ouzi.tech
+  - ""
   resources:
-  - '*'
+  - nodes
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 {{- end -}}

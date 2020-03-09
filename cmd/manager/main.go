@@ -5,9 +5,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/ouzi-dev/node-tagger/pkg/env"
 	"os"
 	"runtime"
+
+	"github.com/ouzi-dev/node-tagger/pkg/env"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 
 	"github.com/ouzi-dev/node-tagger/pkg/flags"

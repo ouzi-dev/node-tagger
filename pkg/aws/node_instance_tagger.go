@@ -5,8 +5,11 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	"github.com/pkg/errors"
-	v1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 )
+
+//nolint
+//go:generate mockgen -package=mocks -destination ../mocks/mock_ec2iface.go github.com/aws/aws-sdk-go/service/ec2/ec2iface EC2API
 
 type nodeInstanceTagger struct {
 	ec2Client ec2iface.EC2API
@@ -18,7 +21,7 @@ func NewNodeInstanceTagger(ec2Client ec2iface.EC2API) NodeTagger {
 	}
 }
 
-func (n *nodeInstanceTagger) EnsureInstanceNodeHasTags(node *v1.Node, tags map[string]string) error {
+func (n *nodeInstanceTagger) EnsureInstanceNodeHasTags(node *corev1.Node, tags map[string]string) error {
 	describeInstancesInput := &ec2.DescribeInstancesInput{
 		Filters: []*ec2.Filter{
 			{
@@ -34,11 +37,12 @@ func (n *nodeInstanceTagger) EnsureInstanceNodeHasTags(node *v1.Node, tags map[s
 	}
 
 	if len(describeInstancesOutput.Reservations) == 0 || len(describeInstancesOutput.Reservations[0].Instances) == 0 {
-		return errors.Errorf("No instances found fot the node")
+		return errors.Errorf("No instances found for the node with private dns: %s", node.Name)
 	}
 
 	if len(describeInstancesOutput.Reservations) > 1 || len(describeInstancesOutput.Reservations[0].Instances) > 1 {
-		return errors.Errorf("More than one instances found. Cannot proceed with tagging")
+		return errors.Errorf("More than one instances found with private dns: %s. Cannot proceed with tagging",
+			node.Name)
 	}
 
 	existingTags := describeInstancesOutput.Reservations[0].Instances[0].Tags
