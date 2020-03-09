@@ -44,6 +44,8 @@ spec:
               path: /readyz
               port: http
           env:
+            - name: AWS_REGION
+              value: "us-east-1"
             - name: SERVICE_MONITOR_NAMESPACE
               valueFrom:
                 fieldRef:
