@@ -26,8 +26,8 @@ awsCredentials:
 
 # Specifies the tags to apply to the aws node instances
 tagsToApply:
-  #- name: exampleName
-  #  value: exampleValue
+  - name: exampleName
+    value: exampleValue
   #- name: exampleName2
   #  value: exampleValue2
 

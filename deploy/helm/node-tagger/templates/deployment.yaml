@@ -9,14 +9,14 @@ spec:
   selector:
     matchLabels:
       {{- include "node-tagger.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         name: {{ include "node-tagger.fullname" . }}
         {{- include "node-tagger.selectorLabels" . | nindent 8 }}
     spec:
-      strategy:
-        type: Recreate
       serviceAccountName: {{ include "node-tagger.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -49,9 +49,11 @@ spec:
             httpGet:
               path: /readyz
               port: http
+{{- if .Values.awsCredentials.create }}
           envFrom:
           - secretRef:
               name: {{ include "node-tagger.credentialsSecretName" . }}
+{{- end }}
           env:
           - name: SERVICE_MONITOR_NAMESPACE
             valueFrom:
