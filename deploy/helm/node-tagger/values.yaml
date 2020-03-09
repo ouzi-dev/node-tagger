@@ -13,6 +13,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 awsCredentials:
+  # Region must always be set
+  awsRegion:
   # Whether to mount the secret in the pod
   # Set to false if you want to use a different aws auth method e.g. eks iam service account
   useSecret: true
@@ -22,7 +24,6 @@ awsCredentials:
   secretName:
   awsAccessKeyId:
   awsSecretAccessKey:
-  awsRegion:
 
 # Specifies the tags to apply to the aws node instances
 tagsToApply:

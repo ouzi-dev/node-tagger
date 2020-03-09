@@ -161,6 +161,7 @@ helm-clean:
 
 # does not work without explicitly specifying the api version
 # see: https://github.com/helm/helm/issues/6505
+# we explicitly set awsCredentials.awsRegion so that we pass the validate stage but the validation still occurs
 .PHONY: helm-validate
 helm-validate:
 	helm template node-tagger \
@@ -171,6 +172,7 @@ helm-validate:
 	-a monitoring.coreos.com/v1 \
 	-a apiextensions.k8s.io/v1beta1 \
 	-a credstash.ouzi.tech/v1 \
+	--set awsCredentials.awsRegion=us-west-2 \
 	$(CHART_PATH)/${CHART_NAME}
 
 .PHONY: helm-package
