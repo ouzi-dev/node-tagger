@@ -1,6 +1,6 @@
 module github.com/ouzi-dev/node-tagger
 
-go 1.13
+go 1.14
 
 require (
 	github.com/aws/aws-sdk-go v1.29.18
@@ -9,12 +9,11 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.4.0
-	go.opencensus.io v0.21.0
-	golang.org/x/tools v0.0.0-20200306191617-51e69f71924f // indirect
+	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
+	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
 	k8s.io/api v0.17.3
 	k8s.io/apimachinery v0.17.3
 	k8s.io/client-go v12.0.0+incompatible
-	k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
 	sigs.k8s.io/controller-runtime v0.5.0
 )
 
