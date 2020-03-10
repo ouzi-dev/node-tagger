@@ -9,8 +9,10 @@ spec:
   selector:
     matchLabels:
       {{- include "node-tagger.selectorLabels" . | nindent 6 }}
+{{- with .Values.strategy }}
   strategy:
-    type: Recreate
+    {{- toYaml . | nindent 4 }}
+{{- end }}
   template:
     metadata:
       labels:
@@ -26,6 +28,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           args:
+{{- if .Values.verboseLogging }}
+            - --zap-level 1
+{{- end }}
 {{- range .Values.tagsToApply }}
             - -t
             - {{ .name }}={{ .value }}

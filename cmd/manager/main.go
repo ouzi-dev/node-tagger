@@ -112,12 +112,11 @@ func main() {
 		os.Exit(1)
 	}
 
-
 	managerOptions := manager.Options{
 		MetricsBindAddress:     fmt.Sprintf("%s:%d", metricsHost, metricsPort),
 		HealthProbeBindAddress: fmt.Sprintf("%s:%d", healthProbeHost, healthProbePort),
-		LeaderElection: true,
-		LeaderElectionID: "node-tagger-lock",
+		LeaderElection:         true,
+		LeaderElectionID:       "node-tagger-lock",
 	}
 
 	if flags.LeaderElectionNamespace != "" {

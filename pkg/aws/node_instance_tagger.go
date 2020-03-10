@@ -4,8 +4,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
+	"github.com/ouzi-dev/node-tagger/pkg/constants"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 //nolint
@@ -15,6 +17,8 @@ type nodeInstanceTagger struct {
 	ec2Client ec2iface.EC2API
 }
 
+var log = logf.Log.WithName("node_instance_tagger")
+
 func NewNodeInstanceTagger(ec2Client ec2iface.EC2API) NodeTagger {
 	return &nodeInstanceTagger{
 		ec2Client: ec2Client,
@@ -22,6 +26,8 @@ func NewNodeInstanceTagger(ec2Client ec2iface.EC2API) NodeTagger {
 }
 
 func (n *nodeInstanceTagger) EnsureInstanceNodeHasTags(node *corev1.Node, tags map[string]string) error {
+	log.WithValues("Node.Name", node.Name)
+
 	describeInstancesInput := &ec2.DescribeInstancesInput{
 		Filters: []*ec2.Filter{
 			{
@@ -46,18 +52,21 @@ func (n *nodeInstanceTagger) EnsureInstanceNodeHasTags(node *corev1.Node, tags m
 	}
 
 	existingTags := describeInstancesOutput.Reservations[0].Instances[0].Tags
+	instanceID := describeInstancesOutput.Reservations[0].Instances[0].InstanceId
 
 	if instanceAlreadyTagged(tags, existingTags) {
+		log.V(constants.DebugLogVerbosity).Info("Instance already tagged.", "Instance.ID", *instanceID)
 		return nil
 	}
 
 	newTags := convertDesiredTagsToAwsTags(tags)
-	instanceID := describeInstancesOutput.Reservations[0].Instances[0].InstanceId
 
 	createTagsInput := &ec2.CreateTagsInput{
 		Resources: []*string{instanceID},
 		Tags:      newTags,
 	}
+
+	log.Info("Tagging instance.", "Instance.ID", *instanceID)
 
 	_, err = n.ec2Client.CreateTags(createTagsInput)
 	if err != nil {
