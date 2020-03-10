@@ -23,7 +23,6 @@ import (
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	kubemetrics "github.com/operator-framework/operator-sdk/pkg/kube-metrics"
-	"github.com/operator-framework/operator-sdk/pkg/leader"
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 	"github.com/operator-framework/operator-sdk/pkg/metrics"
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
@@ -53,6 +52,13 @@ func init() {
 		"t",
 		map[string]string{},
 		"Tags to add to the aws instances on which the cluster nodes run on")
+
+	pflag.StringVarP(
+		&flags.LeaderElectionNamespace,
+		"leader-election-namespace",
+		"l",
+		"",
+		"The leader election namespace. Will auto-discover if not provided")
 }
 
 func printVersion() {
@@ -106,17 +112,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	ctx := context.TODO()
-	// Become the leader before proceeding
-	err = leader.Become(ctx, "node-tagger-lock")
-	if err != nil {
-		log.Error(err, "")
-		os.Exit(1)
-	}
 
 	managerOptions := manager.Options{
 		MetricsBindAddress:     fmt.Sprintf("%s:%d", metricsHost, metricsPort),
 		HealthProbeBindAddress: fmt.Sprintf("%s:%d", healthProbeHost, healthProbePort),
+		LeaderElection: true,
+		LeaderElectionID: "node-tagger-lock",
+	}
+
+	if flags.LeaderElectionNamespace != "" {
+		managerOptions.LeaderElectionNamespace = flags.LeaderElectionNamespace
 	}
 
 	// Create a new Cmd to provide shared dependencies and start components
@@ -155,7 +160,7 @@ func main() {
 	if err != nil {
 		log.Error(err, "Error getting service Monitor namespace")
 	} else {
-		addMetrics(ctx, cfg, serviceMonitorNamespace)
+		addMetrics(context.TODO(), cfg, serviceMonitorNamespace)
 	}
 
 	log.Info("Starting the Cmd.")
