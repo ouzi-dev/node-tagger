@@ -17,7 +17,7 @@ podDisruptionBudget:
 
 awsCredentials:
   # Region must always be set
-  awsRegion: as
+  awsRegion:
   # Whether to mount the secret in the pod
   # Set to false if you want to use a different aws auth method e.g. eks iam service account
   useSecret: true
