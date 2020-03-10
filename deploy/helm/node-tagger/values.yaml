@@ -35,6 +35,9 @@ tagsToApply:
   #- name: exampleName2
   #  value: exampleValue2
 
+# Specifies whether to turn on more verbose logs
+verboseLogging: false
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

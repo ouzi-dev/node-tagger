@@ -17,7 +17,7 @@ type nodeInstanceTagger struct {
 	ec2Client ec2iface.EC2API
 }
 
-var log = logf.Log.WithName("credstashsecret_getter")
+var log = logf.Log.WithName("node_instance_tagger")
 
 func NewNodeInstanceTagger(ec2Client ec2iface.EC2API) NodeTagger {
 	return &nodeInstanceTagger{
