@@ -17,7 +17,7 @@ podDisruptionBudget:
 
 awsCredentials:
   # Region must always be set
-  awsRegion:
+  awsRegion: as
   # Whether to mount the secret in the pod
   # Set to false if you want to use a different aws auth method e.g. eks iam service account
   useSecret: true
@@ -66,6 +66,12 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

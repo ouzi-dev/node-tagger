@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/ouzi-dev/node-tagger/pkg/constants"
+
 	"github.com/aws/aws-sdk-go/service/ec2"
 
 	"github.com/ouzi-dev/node-tagger/pkg/aws"
@@ -105,7 +107,7 @@ func (r *ReconcileNode) Reconcile(request reconcile.Request) (reconcile.Result, 
 
 	// Node is not an aws one so skip it. Return and don't requeue
 	if !isAwsNode(instance) {
-		reqLogger.Info("Node is not an AWS node. Skipping")
+		reqLogger.V(constants.DebugLogVerbosity).Info("Node is not an AWS node. Skipping")
 		return reconcile.Result{}, nil
 	}
 
@@ -113,9 +115,6 @@ func (r *ReconcileNode) Reconcile(request reconcile.Request) (reconcile.Result, 
 	if err != nil {
 		return reconcile.Result{}, err
 	}
-
-	// Node already tagged properly
-	reqLogger.Info("Node instance has been tagged")
 
 	return reconcile.Result{}, nil
 }

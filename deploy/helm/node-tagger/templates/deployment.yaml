@@ -9,8 +9,10 @@ spec:
   selector:
     matchLabels:
       {{- include "node-tagger.selectorLabels" . | nindent 6 }}
+{{- with .Values.strategy }}
   strategy:
-    type: Recreate
+    {{- toYaml . | nindent 4 }}
+{{- end }}
   template:
     metadata:
       labels:
