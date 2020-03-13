@@ -126,13 +126,6 @@ postsubmits:
     branches:
       - master
     spec:
-      nodeSelector:
-        group_name: image-builder
-      tolerations:
-        - key: "imagebuilderonly"
-          value: "true"
-          operator: "Equal"
-          effect: "PreferNoSchedule"
       containers:
         - name: "release"
           imagePullPolicy: Always
